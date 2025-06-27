@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
 import os
 import paho.mqtt.client as mqtt
+import time
 
 app = Flask(__name__);
 
@@ -24,6 +25,7 @@ def toggle():
         client = mqtt.Client();
         client.connect(MQTT_BROKER, MQTT_PORT, 60);
         client.publish(MQTT_TOPIC, payload="toggle");
+        client.loop();
         client.disconnect();
 
         return jsonify({"status": "ok"}), 200;
