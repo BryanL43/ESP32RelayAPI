@@ -31,3 +31,20 @@ def toggle():
         return jsonify({"status": "ok"}), 200;
     except Exception as e:
         return jsonify({"error": str(e)}), 500;
+
+@app.route("/shutdown", methods=["POST"])
+def shutdown():
+    token = request.headers.get("X-Auth-Token");
+    if token != API_TOKEN:
+        return jsonify({"error": "unauthorized"}), 403;
+
+    try:
+        client = mqtt.Client();
+        client.connect(MQTT_BROKER, MQTT_PORT, 60);
+        client.publish(MQTT_TOPIC, payload="shutdown");
+        client.loop();
+        client.disconnect();
+
+        return jsonify({"status": "ok"}), 200;
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500;
