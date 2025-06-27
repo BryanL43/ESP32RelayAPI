@@ -1,13 +1,14 @@
 from flask import Flask, jsonify, request
 import os
 import paho.mqtt.client as mqtt
-import time
 
 app = Flask(__name__);
 
 API_TOKEN = os.environ.get("API_TOKEN");
+ADAFRUIT_USERNAME = os.environ.get("ADAFRUIT_USERNAME");
+ADAFRUIT_AIO_KEY = os.environ.get("ADAFRUIT_AIO_KEY");
 
-MQTT_BROKER = "broker.hivemq.com";
+MQTT_BROKER = "io.adafruit.com";
 MQTT_PORT = 1883;
 MQTT_TOPIC = "8cb124f8c277c16ec0b2ee00569fd151a08e342b/esp32/relay";
 
@@ -23,6 +24,7 @@ def toggle():
 
     try:
         client = mqtt.Client();
+        client.username_pw_set(ADAFRUIT_USERNAME, ADAFRUIT_AIO_KEY);
         client.connect(MQTT_BROKER, MQTT_PORT, 60);
         client.publish(MQTT_TOPIC, payload="toggle");
         client.loop();
