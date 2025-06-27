@@ -10,7 +10,8 @@ ADAFRUIT_AIO_KEY = os.environ.get("ADAFRUIT_AIO_KEY");
 
 MQTT_BROKER = "io.adafruit.com";
 MQTT_PORT = 1883;
-MQTT_TOPIC = "8cb124f8c277c16ec0b2ee00569fd151a08e342b/esp32/relay";
+# MQTT_TOPIC = "8cb124f8c277c16ec0b2ee00569fd151a08e342b/esp32/relay";
+MQTT_TOPIC = "BryanL43/feeds/relay";
 
 @app.route("/")
 def home():
