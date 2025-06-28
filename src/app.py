@@ -46,6 +46,7 @@ def shutdown():
 
     try:
         client = mqtt.Client();
+        client.username_pw_set(ADAFRUIT_USERNAME, ADAFRUIT_AIO_KEY);
         client.connect(MQTT_BROKER, MQTT_PORT, 60);
         client.publish(MQTT_TOPIC, payload="shutdown");
         client.loop();
