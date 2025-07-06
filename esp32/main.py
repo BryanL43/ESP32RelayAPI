@@ -53,7 +53,16 @@ def connect_wifi():
     wlan = network.WLAN(network.STA_IF);
     wlan.active(True);
 
+    reset_counter = 0;
+
     while not wlan.isconnected():
+        # Reset ESP32 if connection fails 10 times (5 minutes).
+        # Potential unresponsiveness after days of inactivity.
+        if reset_counter >= 10:
+            print("\nWiFi connection failed. Resetting...");
+            reset_counter = 0;
+            machine.reset();
+
         print("Attempting to connect to WiFi...", end="");
         wlan.connect(SSID, PASSWORD);
 
@@ -68,8 +77,9 @@ def connect_wifi():
             print("\nWiFi connected:", wlan.ifconfig());
             break;
         else:
-            print("\nWiFi connection failed. Retrying in 5 seconds...");
-            time.sleep(5);
+            print("\nWiFi connection failed. Retrying in 30 seconds...");
+            reset_counter += 1;
+            time.sleep(30);
 
 def setup_mqtt():
     """Setup MQTT connection and subscribe to topic."""
@@ -80,9 +90,6 @@ def setup_mqtt():
 
     while True:
         try:
-            # Connect/Verify WiFi connection
-            connect_wifi();
-
             # Establish MQTT Broker connection and subscribe
             client = MQTTClient(
                 client_id=client_id,
@@ -143,4 +150,8 @@ _thread.start_new_thread(touch_thread, ());
 
 # Prevent main thread from exiting
 while True:
+    if not network.WLAN(network.STA_IF).isconnected():
+        print("Main thread: WiFi disconnected. Reconnecting...");
+        connect_wifi();
+    
     time.sleep(5);
