@@ -22,7 +22,7 @@ TTP223B Capacitive Touch Switch Module
 ```
 
 
-### Hardware Diagram
+## Hardware Diagram
 
 ![alt text](https://github.com/BryanL43/ESP32RelayAPI/blob/main/assets/Hardware_Diagram.png "Hardware Diagram")
 
